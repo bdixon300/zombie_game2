@@ -1,6 +1,6 @@
 var game = new Phaser.Game(1300, 650, Phaser.AUTO, 'game', {preload: preload, create: create, update: update, }); 
 var cursor;
-var player;
+
 var playerDead;
 var gun;
 var ground;
@@ -8,22 +8,10 @@ var platforms1;
 var platforms2;
 var gate;
 var trap;
-var zombie1;
-var zombie1Death;
-var zombie2;
-var zombie2Death;
-var zombie3;
-var zombie3Death;
-var zombie4;
-var zombie4Death;
-var zombie5;
-var zombie5Death;
-var zombie6;
-var zombie6Death;
-var zombie7;
-var zombie7Death;
-var zombie8;
-var zombie8Death;
+var zombie =[];
+var zombieDie = [];
+
+var zombieDeath = [];
 var bullets;
 var fireRate = 100;
 var nextFire = 0;
@@ -35,10 +23,7 @@ var time;
 var timeLength = 0;
 var timeLogEnd;
 var gameoverText;
-var xcoordinate = [0, 650, 1247];     
-var ycoordinate = [0, 500];
-var randomx = game.rnd.integerInRange(1, 3);
-var randomy = game.rnd.integerInRange(1, 2);
+var position = [ [0, 0], [650, 0], [1247, 0], [0, 500], [1247, 500], [0, 350], [650, 0], [1247, 350] ];
 
 
 function preload()
@@ -74,7 +59,7 @@ function create()
     
                 //zombie code
                 createZombies();
-                game.time.events.loop(2000, zombieJump, this);
+                game.time.events.loop(1000, zombieJump, this);
     
                 //gun code
                 gun = game.add.sprite(player.x, player.y, 'gun');
@@ -134,9 +119,17 @@ function update()
                 
                 
                 //code to revive zombies if they are all dead
-                if (zombie1Death && zombie2Death && zombie3Death && zombie4Death && zombie5Death && zombie6Death && zombie7Death && zombie8Death)
+                if (zombieDie[0] && zombieDie[1] && zombieDie[2] && zombieDie[3] && zombieDie[4] && zombieDie[5] && zombieDie[6] && zombieDie[7])
                 {
                     createZombies();
+                    zombieDie[0] = false;
+                    zombieDie[1] = false;
+                    zombieDie[2] = false;
+                    zombieDie[3] = false;
+                    zombieDie[4] = false;
+                    zombieDie[5] = false;
+                    zombieDie[6] = false;
+                    zombieDie[7] = false;
                 }
     
     
@@ -199,247 +192,99 @@ var createWorld = function()
                 game.add.sprite(725, 0, 'trap_door', 0, trap);
                 trap.setAll('body.immovable', true);    
 };
-
-
 //zombie functions (creating the zombies, killing the zombies, moving the zombies and reviving the zombies)
 var createZombies = function()
 {
-                  
-    
-        // They were not grouped, they had to be isolated, otherwise a single bullet would kill all the zombies
-        // Furthermore it is a simpler setup to understand as a beginner programmer
-                    zombie1 = game.add.sprite(0, 0, 'zombie');    
-          game.physics.arcade.enable(zombie1);
-          game.physics.arcade.enableBody(zombie1);
-          zombie1.body.gravity.y = 300;
-          zombie1.body.velocity.x = 250;
-          zombie1.body.bounce.x = 1;    
-          zombie1.body.collideWorldBounds = true;   
+    for (var i = 0; i < 8; i++)
+         {
+              
+                
+            zombie[i] = game.add.sprite(position[i][0], position[i][1], 'zombie');    
+          game.physics.arcade.enable(zombie[i]);
+          game.physics.arcade.enableBody(zombie[i]);
+          zombie[i].body.gravity.y = 300;
+          zombie[i].body.velocity.x = 400;
+          zombie[i].body.bounce.x = 1;    
+          zombie[i].body.collideWorldBounds = true;   
           zombie1Death = false;
-    
-                    zombie2 = game.add.sprite(650, 0, 'zombie');    
-          game.physics.arcade.enable(zombie2);
-          game.physics.arcade.enableBody(zombie2);
-          zombie2.body.gravity.y = 300;
-          zombie2.body.velocity.x = 250;
-          zombie2.body.bounce.x = 1; 
-          zombie2.body.collideWorldBounds = true;   
-          zombie2Death = false;
-    
-                    zombie3 = game.add.sprite(1247, 0, 'zombie');    
-          game.physics.arcade.enable(zombie3);
-          game.physics.arcade.enableBody(zombie3);
-          zombie3.body.gravity.y = 300;
-          zombie3.body.velocity.x = 250;
-          zombie3.body.bounce.x = 1; 
-          zombie3.body.collideWorldBounds = true;   
-          zombie3Death = false;
-    
-                    zombie4 = game.add.sprite(1247, 500, 'zombie');    
-          game.physics.arcade.enable(zombie4);
-          game.physics.arcade.enableBody(zombie4);
-          zombie4.body.gravity.y = 300;
-          zombie4.body.velocity.x = 300;
-          zombie4.body.bounce.x = 1; 
-          zombie4.body.collideWorldBounds = true;   
-          zombie4Death = false;
-    
-    
-                    zombie5 = game.add.sprite(0, 500, 'zombie');    
-          game.physics.arcade.enable(zombie5);
-          game.physics.arcade.enableBody(zombie5);
-          zombie5.body.gravity.y = 300;
-          zombie5.body.velocity.x = 300;
-          zombie5.body.bounce.x = 1; 
-          zombie5.body.collideWorldBounds = true;   
-          zombie5Death = false;
-    
-                    zombie6 = game.add.sprite(0, 340, 'zombie');    
-          game.physics.arcade.enable(zombie6);
-          game.physics.arcade.enableBody(zombie6);
-          zombie6.body.gravity.y = 300;
-          zombie6.body.velocity.x = 300;
-          zombie6.body.bounce.x = 1; 
-          zombie6.body.collideWorldBounds = true;   
-          zombie6Death = false; 
-    
-                    zombie7 = game.add.sprite(1247, 340, 'zombie');    
-          game.physics.arcade.enable(zombie7);
-          game.physics.arcade.enableBody(zombie7);
-          zombie7.body.gravity.y = 300;
-          zombie7.body.velocity.x = 300;
-          zombie7.body.bounce.x = 1; 
-          zombie7.body.collideWorldBounds = true;   
-          zombie7Death = false;
-    
-                    zombie8 = game.add.sprite(670, 0, 'zombie');    
-          game.physics.arcade.enable(zombie8);
-          game.physics.arcade.enableBody(zombie8);
-          zombie8.body.gravity.y = 300;
-          zombie8.body.velocity.x = 300;
-          zombie8.body.bounce.x = 1; 
-          zombie8.body.collideWorldBounds = true;   
-          zombie6Death = false;
-            
+         }         
 };
-
 var zombieJump = function()
-{       
-  
-    zombie1.body.velocity.y = -350;
-    zombie2.body.velocity.y = -350;
-    zombie3.body.velocity.y = -350;
-    zombie4.body.velocity.y = -350;
-    
-    
+{  
+    for (var i = 0; i < 4; i++)
+    {
+  if (zombie[i].body.touching.down)
+  {
+   zombie[i].body.velocity.y = -400;   
+  }
+    }
+   
 };
-
-
-var zombieDeath1 = function()
+zombieDeath[0] = function()
 {
-  
-    zombie1.kill();
-    zombie1Death = true;    
+    zombie[0].kill();
+    zombieDie[0] = true;
     highScoreFunction();
-
 };
-var zombieDeath2 = function()
+zombieDeath[1] = function()
 {
-    
-     zombie2.kill();    
-     zombie2Death = true;
-     highScoreFunction();
-
-    
+    zombie[1].kill();
+    zombieDie[1] = true;
+    highScoreFunction();
 };
-var zombieDeath3 = function()
+zombieDeath[2] = function()
 {
-   
-     zombie3.kill();
-     zombie3Death = true;
-     highScoreFunction();
-    
-    
+    zombie[2].kill();
+    zombieDie[2] = true;
+   highScoreFunction();
 };
-var zombieDeath4 = function()
+zombieDeath[3] = function()
 {
-  
-     zombie4.kill();
-      zombie4Death = true;
-      highScoreFunction();
-    
+    zombie[3].kill();
+    zombieDie[3] = true;
+   highScoreFunction();
 };
-var zombieDeath5 = function()
+zombieDeath[4] = function()
 {
-   
-     zombie5.kill();
-      zombie5Death = true;  
-         highScoreFunction();
-    
+    zombie[4].kill();
+    zombieDie[4] = true;
+    highScoreFunction();
 };
-var zombieDeath6 = function()
+zombieDeath[5] = function()
 {
-
-    
-     zombie6.kill();
-      zombie6Death = true;  
-      highScoreFunction(); 
+    zombie[5].kill();
+    zombieDie[5] = true;
+    highScoreFunction();
 };
-var zombieDeath7 = function()
+zombieDeath[6] = function()
 {
-
-    
-     zombie7.kill();
-      zombie7Death = true;  
-      highScoreFunction(); 
+    zombie[6].kill();
+    zombieDie[6] = true;
+    highScoreFunction();
 };
-var zombieDeath8 = function()
+zombieDeath[7] = function()
 {
-
-    
-     zombie8.kill();
-      zombie8Death = true;  
-      highScoreFunction(); 
+    zombie[7].kill();
+    zombieDie[7] = true;
+    highScoreFunction();
 };
 
 var zombieCollisionHandler = function()
 {
                 
-                game.physics.arcade.collide(zombie1, ground);
-                game.physics.arcade.collide(zombie1, platforms1);
-                game.physics.arcade.collide(zombie1, platforms2);
-                game.physics.arcade.collide(zombie1, gate);
-                game.physics.arcade.collide(zombie1, trap);
-                
-        
-    
-                
-                game.physics.arcade.collide(zombie2, ground);
-                game.physics.arcade.collide(zombie2, platforms1);
-                game.physics.arcade.collide(zombie2, platforms2);
-                game.physics.arcade.collide(zombie2, gate);
-                game.physics.arcade.collide(zombie2, trap);
-    
-                
-                game.physics.arcade.collide(zombie3, ground);
-                game.physics.arcade.collide(zombie3, platforms1);
-                game.physics.arcade.collide(zombie3, platforms2);
-                game.physics.arcade.collide(zombie3, gate);
-                game.physics.arcade.collide(zombie3, trap);
-    
-    
-                game.physics.arcade.collide(zombie4, ground);
-                game.physics.arcade.collide(zombie4, platforms1);
-                game.physics.arcade.collide(zombie4, platforms2);
-                game.physics.arcade.collide(zombie4, gate);
-                game.physics.arcade.collide(zombie4, trap);
-    
-    
-                game.physics.arcade.collide(zombie5, ground);
-                game.physics.arcade.collide(zombie5, platforms1);
-                game.physics.arcade.collide(zombie5, platforms2);
-                game.physics.arcade.collide(zombie5, gate);
-                game.physics.arcade.collide(zombie5, trap);
-    
-    
-                game.physics.arcade.collide(zombie6, ground);
-                game.physics.arcade.collide(zombie6, platforms1);
-                game.physics.arcade.collide(zombie6, platforms2);
-                game.physics.arcade.collide(zombie6, gate);
-                game.physics.arcade.collide(zombie6, trap);
-    
-    
-                game.physics.arcade.collide(zombie7, ground);
-                game.physics.arcade.collide(zombie7, platforms1);
-                game.physics.arcade.collide(zombie7, platforms2);
-                game.physics.arcade.collide(zombie7, gate);
-                game.physics.arcade.collide(zombie7, trap);
-    
-                game.physics.arcade.collide(zombie8, ground);
-                game.physics.arcade.collide(zombie8, platforms1);
-                game.physics.arcade.collide(zombie8, platforms2);
-                game.physics.arcade.collide(zombie8, gate);
-                game.physics.arcade.collide(zombie8, trap);
-    
-    
-             
-                game.physics.arcade.overlap(zombie1, bullets, zombieDeath1);
-                game.physics.arcade.overlap(zombie2, bullets, zombieDeath2);
-                game.physics.arcade.overlap(zombie3, bullets, zombieDeath3);
-                game.physics.arcade.overlap(zombie4, bullets, zombieDeath4);
-                game.physics.arcade.overlap(zombie5, bullets, zombieDeath5); 
-                game.physics.arcade.overlap(zombie6, bullets, zombieDeath6);
-                game.physics.arcade.overlap(zombie7, bullets, zombieDeath7);
-                game.physics.arcade.overlap(zombie8, bullets, zombieDeath8);
-                            
-                game.physics.arcade.overlap(zombie1, player,  playerDie);
-                game.physics.arcade.overlap(zombie2, player,  playerDie);
-                game.physics.arcade.overlap(zombie3, player,  playerDie);
-                game.physics.arcade.overlap(zombie4, player,  playerDie);
-                game.physics.arcade.overlap(zombie5, player,  playerDie);
-                game.physics.arcade.overlap(zombie6, player, playerDie);
-                game.physics.arcade.overlap(zombie7, player,  playerDie);
-                game.physics.arcade.overlap(zombie8, player, playerDie);
+                for (var i = 0; i < 8; i++)
+                {
+                  
+                game.physics.arcade.collide(zombie[i], ground);
+                game.physics.arcade.collide(zombie[i], platforms1);
+                game.physics.arcade.collide(zombie[i], platforms2);
+                game.physics.arcade.collide(zombie[i], gate);
+                game.physics.arcade.collide(zombie[i], trap);
+                game.physics.arcade.overlap(zombie[i], bullets, zombieDeath[i]);       
+                game.physics.arcade.overlap(zombie[i], player,  playerDie);
+                    
+                }
+                    
 };
 
 
@@ -449,14 +294,14 @@ var movePlayer = function()
             if (cursor.left.isDown)
             {
 
-             player.body.velocity.x = -300; 
+             player.body.velocity.x = -350; 
              player.scale.x = 1;
              gun.scale.x = -1;
             }
     
             else if (cursor.right.isDown)
             {
-             player.body.velocity.x = 300;  
+             player.body.velocity.x = 350;  
              player.scale.x = -1;
              gun.scale.x = 1;    
             }
@@ -467,20 +312,20 @@ var movePlayer = function()
     
             if (cursor.up.isDown && player.body.touching.down)
             {
-             player.body.velocity.y = -350;   
+             player.body.velocity.y = -400;   
             }  
 };
 
 var fireGun = function()
 {       
-                            if (game.time.now > nextFire && bullets.countDead() > 0)
+                            if (game.time.now > nextFire && bullets.countDead() > 0 && !playerDead)
     {
         nextFire = game.time.now + fireRate;
 
         var bullet = bullets.getFirstExists(false);
 
         bullet.reset(gun.x + (40 * player.scale.x * -1), gun.y);
-        bullet.body.velocity.x = 600 * player.scale.x * -1; 
+        bullet.body.velocity.x = 680 * player.scale.x * -1; 
         
        
     }   
@@ -494,24 +339,28 @@ var playerDie = function()
      player.kill();
      gun.kill();
     playerDead = true;
-        
+         
     
 };
 
 
 //text functions for game
 var highScoreFunction = function()
-{     
+{       if (!playerDead)
+            {
         highScore = highScore + 1;
        highScoreDisplay.text = "zombies Killed: " + highScore;
+            }    
 };
+ 
 var timeLog = function()
 {
         
   
-    
+        if (!playerDead)
+        {
         timeLength = timeLength + 1;
         time.text = "Time alive: " + timeLength + " seconds"; 
-        
+        }
     
 };
