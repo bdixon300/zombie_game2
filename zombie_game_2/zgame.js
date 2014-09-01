@@ -206,7 +206,7 @@ var createZombies = function()
           zombie[i].body.velocity.x = 400;
           zombie[i].body.bounce.x = 1;    
           zombie[i].body.collideWorldBounds = true;   
-          zombie1Death = false;
+         
          }         
 };
 var zombieJump = function()
