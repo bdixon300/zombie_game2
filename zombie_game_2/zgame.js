@@ -16,7 +16,7 @@ var bullets;
 var fireRate = 100;
 var nextFire = 0;
 var text;
-var highScore = 0;
+var score = 0;
 var highScoreDisplay;
 var style;
 var time;
@@ -89,7 +89,7 @@ function create()
     
     
                 //highscore + other text code
-                text = "zombies killed: " + highScore;
+                text = "zombies killed: " + score;
                 style = { font: "35px Arial", fill: "#ff0044", align: "center" };                
                 highScoreDisplay = game.add.text(160, 0, text, style);
                 time = game.add.text(790, 0, "Time alive: " + game.time.events.length + " seconds",  style);
@@ -348,8 +348,8 @@ var playerDie = function()
 var highScoreFunction = function()
 {       if (!playerDead)
             {
-        highScore = highScore + 1;
-       highScoreDisplay.text = "zombies Killed: " + highScore;
+        score = score + 1;
+       highScoreDisplay.text = "zombies Killed: " + score;
             }    
 };
  
